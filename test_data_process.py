@@ -62,7 +62,7 @@ class TestDataProcess:
             ['17.', 'Sunder', '38', '10', '10', '18', '29', '-', '52', '40'],
         ])
         mock_spread.side_effect = [43, 23, 23]
-        result = soccer_data_obj._get_min_spread(data)
+        result = soccer_data_obj._get_key_of_min_spread(data)
         assert result == 'Ipswich'
 
     @pytest.mark.parametrize('line_list,expected_spread', [
@@ -108,7 +108,7 @@ class TestDataProcess:
 
     @patch('data_process.DataProcess._get_data')
     @patch('data_process.DataProcess._get_valid_data')
-    @patch('data_process.DataProcess._get_min_spread')
+    @patch('data_process.DataProcess._get_key_of_min_spread')
     def test_get_min_spread_from_file_check_calls(
             self, mock_min_spread, mock_valid_data, mock_get_data,
             soccer_data_obj

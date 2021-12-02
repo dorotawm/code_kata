@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Generator, List, Tuple
+from typing import Callable, Generator, List, Tuple, Optional
 
 import requests
 
@@ -26,7 +26,7 @@ class DataProcess:
         self.spread_indexes = spread_columns_indexes
         self.validation_func = validation_func
 
-    def get_min_spread_from_file(self):
+    def get_min_spread_from_file(self) -> Optional[str]:
         try:
             data = self._get_data()
         except (requests.ConnectionError, requests.HTTPError):
@@ -35,7 +35,7 @@ class DataProcess:
             return None
         try:
             data = self._get_valid_data(data)
-            min_spread = self._get_min_spread(data)
+            min_spread = self._get_key_of_min_spread(data)
         except (IndexError, TypeError):
             _LOGGER.error(
                 'Error on parsing the data - please check '
@@ -56,7 +56,9 @@ class DataProcess:
             if self.validation_func(line.split())
         )
 
-    def _get_min_spread(self, data: Generator[List[str], None, None]) -> str:
+    def _get_key_of_min_spread(
+            self, data: Generator[List[str], None, None]
+    ) -> str:
         results = (
             (line[self.key_index], self._get_spread(line)) for line in data
         )
